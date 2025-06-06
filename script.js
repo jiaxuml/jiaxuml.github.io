@@ -8,6 +8,12 @@ class Game2048 {
         this.bestScoreDisplay = document.getElementById('best-score');
         this.newGameButton = document.getElementById('new-game-button');
         
+        // 添加触摸相关变量
+        this.touchStartX = 0;
+        this.touchStartY = 0;
+        this.touchEndX = 0;
+        this.touchEndY = 0;
+        
         this.init();
     }
 
@@ -19,8 +25,62 @@ class Game2048 {
     }
 
     setupEventListeners() {
+        // 键盘事件
         document.addEventListener('keydown', this.handleKeyPress.bind(this));
         this.newGameButton.addEventListener('click', () => this.newGame());
+
+        // 触摸事件
+        document.addEventListener('touchstart', this.handleTouchStart.bind(this), false);
+        document.addEventListener('touchmove', this.handleTouchMove.bind(this), false);
+        document.addEventListener('touchend', this.handleTouchEnd.bind(this), false);
+    }
+
+    // 处理触摸开始事件
+    handleTouchStart(event) {
+        this.touchStartX = event.touches[0].clientX;
+        this.touchStartY = event.touches[0].clientY;
+    }
+
+    // 处理触摸移动事件
+    handleTouchMove(event) {
+        event.preventDefault(); // 防止页面滚动
+    }
+
+    // 处理触摸结束事件
+    handleTouchEnd(event) {
+        this.touchEndX = event.changedTouches[0].clientX;
+        this.touchEndY = event.changedTouches[0].clientY;
+        this.handleSwipe();
+    }
+
+    // 处理滑动方向
+    handleSwipe() {
+        const dx = this.touchEndX - this.touchStartX;
+        const dy = this.touchEndY - this.touchStartY;
+        
+        // 设置最小滑动距离阈值
+        const minSwipeDistance = 50;
+        
+        // 判断滑动方向
+        if (Math.abs(dx) > Math.abs(dy)) {
+            // 水平滑动
+            if (Math.abs(dx) > minSwipeDistance) {
+                if (dx > 0) {
+                    this.moveRight();
+                } else {
+                    this.moveLeft();
+                }
+            }
+        } else {
+            // 垂直滑动
+            if (Math.abs(dy) > minSwipeDistance) {
+                if (dy > 0) {
+                    this.moveDown();
+                } else {
+                    this.moveUp();
+                }
+            }
+        }
     }
 
     handleKeyPress(event) {
