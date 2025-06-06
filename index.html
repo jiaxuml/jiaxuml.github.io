@@ -5,50 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2048游戏</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>2048</h1>
-        <div class="score-container">
-            <div class="score-box">
-                <span class="score-label">分数</span>
-                <span id="score">0</span>
-            </div>
-            <div class="score-box">
-                <span class="score-label">最高分</span>
-                <span id="best-score">0</span>
-            </div>
-        </div>
-        <div class="game-container">
-            <div class="grid-container">
-                <div class="grid-row">
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
+        <header>
+            <h1>2048</h1>
+            <div class="score-container">
+                <div class="score-box">
+                    <span class="score-label"><i class="fas fa-star"></i> 分数</span>
+                    <span id="score">0</span>
                 </div>
-                <div class="grid-row">
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
+                <div class="score-box">
+                    <span class="score-label"><i class="fas fa-trophy"></i> 最高分</span>
+                    <span id="best-score">0</span>
                 </div>
-                <div class="grid-row">
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                </div>
-                <div class="grid-row">
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
+                <div class="score-box">
+                    <span class="score-label"><i class="fas fa-clock"></i> 用时</span>
+                    <span id="timer">0:00</span>
                 </div>
             </div>
-            <div class="tile-container" id="tile-container"></div>
-        </div>
-        <button id="new-game-button">新游戏</button>
+        </header>
+
+        <main>
+            <div class="game-container">
+                <div class="grid-container">
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                </div>
+                <div class="tile-container" id="tile-container"></div>
+            </div>
+        </main>
+
+        <footer class="controls">
+            <button id="new-game-button">
+                <i class="fas fa-redo"></i> 新游戏
+            </button>
+            <div class="direction-buttons">
+                <button class="dir-btn" id="up-btn">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+                <div class="horizontal-buttons">
+                    <button class="dir-btn" id="left-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="dir-btn" id="right-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <button class="dir-btn" id="down-btn">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+        </footer>
     </div>
     <script src="script.js"></script>
 </body>

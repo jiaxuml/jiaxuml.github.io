@@ -2,11 +2,16 @@ class Game2048 {
     constructor() {
         this.grid = Array(4).fill().map(() => Array(4).fill(0));
         this.score = 0;
-        this.bestScore = parseInt(localStorage.getItem('bestScore')) || 0;
+        const savedBestScore = localStorage.getItem('bestScore');
+        this.bestScore = savedBestScore ? parseInt(savedBestScore) : 0;
         this.tileContainer = document.getElementById('tile-container');
         this.scoreDisplay = document.getElementById('score');
         this.bestScoreDisplay = document.getElementById('best-score');
         this.newGameButton = document.getElementById('new-game-button');
+        this.timerDisplay = document.getElementById('timer');
+        this.startTime = null;
+        this.timerInterval = null;
+        this.hasWon = false;
         
         // 添加触摸相关变量
         this.touchStartX = 0;
@@ -22,6 +27,7 @@ class Game2048 {
         this.addRandomTile();
         this.updateScore();
         this.setupEventListeners();
+        this.bestScoreDisplay.textContent = this.bestScore;
     }
 
     setupEventListeners() {
@@ -33,6 +39,12 @@ class Game2048 {
         document.addEventListener('touchstart', this.handleTouchStart.bind(this), false);
         document.addEventListener('touchmove', this.handleTouchMove.bind(this), false);
         document.addEventListener('touchend', this.handleTouchEnd.bind(this), false);
+
+        // 方向键按钮事件
+        document.getElementById('up-btn').addEventListener('click', () => this.handleDirectionButton('ArrowUp'));
+        document.getElementById('down-btn').addEventListener('click', () => this.handleDirectionButton('ArrowDown'));
+        document.getElementById('left-btn').addEventListener('click', () => this.handleDirectionButton('ArrowLeft'));
+        document.getElementById('right-btn').addEventListener('click', () => this.handleDirectionButton('ArrowRight'));
     }
 
     // 处理触摸开始事件
@@ -100,6 +112,25 @@ class Game2048 {
             this.addRandomTile();
             this.updateScore();
             this.checkGameOver();
+            this.checkWin();
+        }
+    }
+
+    handleDirectionButton(direction) {
+        const oldGrid = JSON.stringify(this.grid);
+        
+        switch(direction) {
+            case 'ArrowUp': this.moveUp(); break;
+            case 'ArrowDown': this.moveDown(); break;
+            case 'ArrowLeft': this.moveLeft(); break;
+            case 'ArrowRight': this.moveRight(); break;
+        }
+
+        if (oldGrid !== JSON.stringify(this.grid)) {
+            this.addRandomTile();
+            this.updateScore();
+            this.checkGameOver();
+            this.checkWin();
         }
     }
 
@@ -211,7 +242,7 @@ class Game2048 {
         if (this.score > this.bestScore) {
             this.bestScore = this.score;
             this.bestScoreDisplay.textContent = this.bestScore;
-            localStorage.setItem('bestScore', this.bestScore);
+            localStorage.setItem('bestScore', this.bestScore.toString());
         }
     }
 
@@ -232,6 +263,7 @@ class Game2048 {
         }
 
         // 游戏结束
+        this.stopTimer();
         setTimeout(() => {
             alert('游戏结束！你的得分是：' + this.score);
         }, 300);
@@ -240,8 +272,45 @@ class Game2048 {
     newGame() {
         this.grid = Array(4).fill().map(() => Array(4).fill(0));
         this.score = 0;
+        this.hasWon = false;
+        this.stopTimer();
         this.updateScore();
         this.init();
+        this.startTimer();
+    }
+
+    startTimer() {
+        this.startTime = Date.now();
+        this.timerInterval = setInterval(() => {
+            const elapsedTime = Math.floor((Date.now() - this.startTime) / 1000);
+            const minutes = Math.floor(elapsedTime / 60);
+            const seconds = elapsedTime % 60;
+            this.timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }, 1000);
+    }
+
+    stopTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
+    }
+
+    checkWin() {
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                if (this.grid[i][j] === 2048 && !this.hasWon) {
+                    this.hasWon = true;
+                    this.stopTimer();
+                    const elapsedTime = Math.floor((Date.now() - this.startTime) / 1000);
+                    const minutes = Math.floor(elapsedTime / 60);
+                    const seconds = elapsedTime % 60;
+                    setTimeout(() => {
+                        alert(`恭喜你赢了！\n用时：${minutes}分${seconds}秒\n得分：${this.score}`);
+                    }, 300);
+                }
+            }
+        }
     }
 }
 
